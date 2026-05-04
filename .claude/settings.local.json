@@ -2,7 +2,8 @@
   "permissions": {
     "allow": [
       "PowerShell(python --version)",
-      "PowerShell(winget install *)"
+      "PowerShell(winget install *)",
+      "PowerShell($git = \"C:\\\\Program Files\\\\Git\\\\cmd\\\\git.exe\"; cd C:\\\\Hz_port; & $git add .; & $git commit -m \"update portfolio\"; & $git push origin main)"
     ]
   }
 }
