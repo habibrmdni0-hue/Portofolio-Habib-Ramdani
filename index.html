@@ -1745,11 +1745,13 @@ themeBtn.addEventListener('click', () => {
     H = canvas.height = hero.offsetHeight;
   }
 
+  const MOBILE_SPEED = isMobile ? 0.5 : 1.0;
+
   function mkP(fromBottom) {
     return {
       x:     Math.random() * W,
       y:     fromBottom ? H + Math.random() * 40 : Math.random() * H,
-      speed: (Math.random() * 0.16 + 0.08) * SPEED_MULT,
+      speed: (Math.random() * 0.16 + 0.08) * SPEED_MULT * MOBILE_SPEED,
       vx:    (Math.random() - 0.5) * 0.15,
       r:     Math.random() * 2 + 1,
       o:     Math.random() * 0.7 + 0.3
@@ -1758,6 +1760,7 @@ themeBtn.addEventListener('click', () => {
 
   function init() { resize(); particles = Array.from({ length: COUNT }, () => mkP(false)); }
 
+  let rafId = null;
   function tick() {
     ctx.clearRect(0, 0, W, H);
     for (let i = 0; i < COUNT; i++) {
@@ -1808,11 +1811,20 @@ themeBtn.addEventListener('click', () => {
         }
       }
     }
-    requestAnimationFrame(tick);
+    rafId = requestAnimationFrame(tick);
   }
 
-  init(); tick();
-  window.addEventListener('resize', init, { passive: true });
+  function startLoop() {
+    if (rafId) cancelAnimationFrame(rafId);
+    rafId = requestAnimationFrame(tick);
+  }
+
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) startLoop();
+  });
+
+  init(); startLoop();
+  window.addEventListener('resize', () => { init(); startLoop(); }, { passive: true });
 })();
 
 
