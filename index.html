@@ -1702,7 +1702,8 @@ themeBtn.addEventListener('click', () => {
 
 /* ── particles ───────────────────────────────────────────────── */
 (function () {
-  const isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
+  const isEdge   = /Edg\//.test(navigator.userAgent);
+  const isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor) && !isEdge;
 
   const canvas = document.getElementById('particles-canvas');
   const ctx = canvas.getContext('2d');
