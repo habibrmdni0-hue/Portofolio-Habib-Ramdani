@@ -1710,8 +1710,8 @@ themeBtn.addEventListener('click', () => {
   let W, H, particles;
   const COUNT = 200, MAX_DIST = 180;
   const MOUSE_RADIUS = 80;
-  const ACCENT       = isChrome ? '61,143,168'  : '74,158,187'; /* #3d8fa8 vs #4a9ebb */
-  const LINE_COLOR   = isChrome ? '61,143,168'  : '74,158,187';
+  const ACCENT       = '74,158,187'; /* #4a9ebb — consistent across all browsers */
+  const LINE_COLOR   = '74,158,187';
   const REPEL_STR    = isChrome ? 0.27 * 4.05 : isEdge ? 0.27 * 0.756 : 0.27 * 0.1;
   const SPEED_MULT   = isChrome ? 6.3         : isEdge ? 1.11         : 0.25;
   const MOVE_EVENT   = isChrome ? 'pointermove'  : 'mousemove';
