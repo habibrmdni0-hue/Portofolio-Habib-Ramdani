@@ -1702,16 +1702,23 @@ themeBtn.addEventListener('click', () => {
 
 /* ── particles ───────────────────────────────────────────────── */
 (function () {
+  const isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
+
   const canvas = document.getElementById('particles-canvas');
   const ctx = canvas.getContext('2d');
   let W, H, particles;
-  const COUNT = 200, MAX_DIST = 180, ACCENT = '74,158,187';
-  const MOUSE_RADIUS = 80, REPEL_STRENGTH = 0.27;
+  const COUNT = 200, MAX_DIST = 180;
+  const MOUSE_RADIUS = 80;
+  const ACCENT       = isChrome ? '61,143,168'  : '74,158,187'; /* #3d8fa8 vs #4a9ebb */
+  const LINE_COLOR   = isChrome ? '61,143,168'  : '74,158,187';
+  const REPEL_STR    = isChrome ? 0.27 * 2.0    : 0.27;
+  const SPEED_MULT   = isChrome ? 1.8            : 1.0;
+  const MOVE_EVENT   = isChrome ? 'pointermove'  : 'mousemove';
 
   let mouse = { x: -9999, y: -9999 };
 
   const hero = document.getElementById('hero');
-  document.addEventListener('mousemove', e => {
+  document.addEventListener(MOVE_EVENT, e => {
     const rect = canvas.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
@@ -1729,12 +1736,12 @@ themeBtn.addEventListener('click', () => {
 
   function mkP(fromBottom) {
     return {
-      x:    Math.random() * W,
-      y:    fromBottom ? H + Math.random() * 40 : Math.random() * H,
-      speed: Math.random() * 0.16 + 0.08, /* 0.08–0.24 px/frame upward */
-      vx:   (Math.random() - 0.5) * 0.15, /* slight horizontal drift */
-      r:    Math.random() * 2 + 1,
-      o:    Math.random() * 0.7 + 0.3
+      x:     Math.random() * W,
+      y:     fromBottom ? H + Math.random() * 40 : Math.random() * H,
+      speed: (Math.random() * 0.16 + 0.08) * SPEED_MULT,
+      vx:    (Math.random() - 0.5) * 0.15,
+      r:     Math.random() * 2 + 1,
+      o:     Math.random() * 0.7 + 0.3
     };
   }
 
@@ -1750,12 +1757,12 @@ themeBtn.addEventListener('click', () => {
       const mdy = p.y - mouse.y;
       const md  = Math.hypot(mdx, mdy);
       if (md < MOUSE_RADIUS && md > 0) {
-        const force = (1 - md / MOUSE_RADIUS) * REPEL_STRENGTH;
+        const force = (1 - md / MOUSE_RADIUS) * REPEL_STR;
         p.vx += (mdx / md) * force;
         p.vy  = (p.vy || 0) + (mdy / md) * force;
       }
 
-      /* dampen horizontal repulsion, preserve upward speed */
+      /* dampen repulsion velocity */
       p.vx *= 0.96;
       if (p.vy) p.vy *= 0.96;
 
@@ -1784,7 +1791,7 @@ themeBtn.addEventListener('click', () => {
           ctx.beginPath();
           ctx.moveTo(p.x, p.y);
           ctx.lineTo(q.x, q.y);
-          ctx.strokeStyle = `rgba(74,158,187,${0.3 * (1 - d / MAX_DIST)})`;
+          ctx.strokeStyle = `rgba(${LINE_COLOR},${0.3 * (1 - d / MAX_DIST)})`;
           ctx.lineWidth = 1.5;
           ctx.stroke();
         }
