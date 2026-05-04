@@ -315,6 +315,7 @@
     }
 
     .hero-btns { display: flex; gap: 14px; flex-wrap: wrap; }
+    #h-btns .btn { opacity: 0; visibility: hidden; }
 
     .btn {
       display: inline-flex;
@@ -1531,7 +1532,7 @@ hero
   .from('#h-w2', { y: '115%', duration: 0.85, ease: 'power4.out' }, '-=0.65')
   .from('#h-tag .hero-tagline-inner', { y: '110%', opacity: 0, duration: 0.7, ease: 'power3.out' }, '-=0.45')
   .from('#h-meta', { y: 16, opacity: 0, duration: 0.5, ease: 'power2.out' }, '-=0.35')
-  .from('#h-btns .btn', { y: 20, autoAlpha: 0, duration: 0.5, stagger: 0.12, ease: 'power2.out' }, '-=0.3')
+  .fromTo('#h-btns .btn', { y: 20, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.5, stagger: 0.12, ease: 'power2.out' }, '-=0.3')
   .from('#h-scroll', { opacity: 0, duration: 0.8 }, '-=0.2');
 
 /* ── generic scroll reveal ───────────────────────────────────── */
