@@ -1710,30 +1710,35 @@ themeBtn.addEventListener('click', () => {
     document.documentElement.style.setProperty('--color-accent', '#4a9ebb');
   }
 
+  const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent) || window.innerWidth < 768;
+
   const canvas = document.getElementById('particles-canvas');
   const ctx = canvas.getContext('2d');
   let W, H, particles;
-  const COUNT = 200, MAX_DIST = 180;
+  const COUNT      = isMobile ? 80  : 200;
+  const MAX_DIST   = isMobile ? 120 : 180;
   const MOUSE_RADIUS = 80;
-  const ACCENT       = '74,158,187'; /* #4a9ebb — consistent across all browsers */
-  const LINE_COLOR   = '74,158,187';
-  const REPEL_STR    = isChrome ? 0.27 * 4.05 : isEdge ? 0.27 * 0.756 : 0.27 * 0.1;
-  const SPEED_MULT   = isChrome ? 6.3         : isEdge ? 1.11         : 0.25;
-  const MOVE_EVENT   = isChrome ? 'pointermove'  : 'mousemove';
+  const ACCENT     = '74,158,187';
+  const LINE_COLOR = '74,158,187';
+  const REPEL_STR  = isChrome ? 0.27 * 4.05 : isEdge ? 0.27 * 0.756 : 0.27 * 0.1;
+  const SPEED_MULT = isChrome ? 6.3          : isEdge ? 1.11          : 0.25;
+  const MOVE_EVENT = isChrome ? 'pointermove' : 'mousemove';
 
   let mouse = { x: -9999, y: -9999 };
 
   const hero = document.getElementById('hero');
-  document.addEventListener(MOVE_EVENT, e => {
-    const rect = canvas.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    if (x >= 0 && x <= rect.width && y >= 0 && y <= rect.height) {
-      mouse.x = x; mouse.y = y;
-    } else {
-      mouse.x = -9999; mouse.y = -9999;
-    }
-  }, { passive: true });
+  if (!isMobile) {
+    document.addEventListener(MOVE_EVENT, e => {
+      const rect = canvas.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      if (x >= 0 && x <= rect.width && y >= 0 && y <= rect.height) {
+        mouse.x = x; mouse.y = y;
+      } else {
+        mouse.x = -9999; mouse.y = -9999;
+      }
+    }, { passive: true });
+  }
 
   function resize() {
     W = canvas.width  = hero.offsetWidth;
