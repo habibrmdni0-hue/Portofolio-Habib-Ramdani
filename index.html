@@ -1703,17 +1703,15 @@ themeBtn.addEventListener('click', () => {
 /* ── particles ───────────────────────────────────────────────── */
 (function () {
   const canvas = document.getElementById('particles-canvas');
-  const ctx = canvas.getContext('2d', { willReadFrequently: false, colorSpace: 'srgb' });
+  const ctx = canvas.getContext('2d');
   let W, H, particles;
   const COUNT = 200, MAX_DIST = 180, ACCENT = '74,158,187';
   const MOUSE_RADIUS = 80, REPEL_STRENGTH = 0.27;
-  const TARGET_FPS = 60, FRAME_MS = 1000 / TARGET_FPS;
-  let lastTs = 0;
 
   let mouse = { x: -9999, y: -9999 };
 
   const hero = document.getElementById('hero');
-  function handleMouse(e) {
+  document.addEventListener('mousemove', e => {
     const rect = canvas.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
@@ -1722,8 +1720,7 @@ themeBtn.addEventListener('click', () => {
     } else {
       mouse.x = -9999; mouse.y = -9999;
     }
-  }
-  document.addEventListener('pointermove', handleMouse, { passive: true });
+  }, { passive: true });
 
   function resize() {
     W = canvas.width  = hero.offsetWidth;
@@ -1734,8 +1731,8 @@ themeBtn.addEventListener('click', () => {
     return {
       x:    Math.random() * W,
       y:    fromBottom ? H + Math.random() * 40 : Math.random() * H,
-      speed: Math.random() * 0.16 + 0.08,
-      vx:   (Math.random() - 0.5) * 0.15,
+      speed: Math.random() * 0.16 + 0.08, /* 0.08–0.24 px/frame upward */
+      vx:   (Math.random() - 0.5) * 0.15, /* slight horizontal drift */
       r:    Math.random() * 2 + 1,
       o:    Math.random() * 0.7 + 0.3
     };
@@ -1743,12 +1740,7 @@ themeBtn.addEventListener('click', () => {
 
   function init() { resize(); particles = Array.from({ length: COUNT }, () => mkP(false)); }
 
-  function tick(ts) {
-    requestAnimationFrame(tick);
-    const dt = Math.min(ts - lastTs, 32) / FRAME_MS;
-    lastTs = ts;
-    if (dt === 0) return;
-
+  function tick() {
     ctx.clearRect(0, 0, W, H);
     for (let i = 0; i < COUNT; i++) {
       const p = particles[i];
@@ -1758,18 +1750,18 @@ themeBtn.addEventListener('click', () => {
       const mdy = p.y - mouse.y;
       const md  = Math.hypot(mdx, mdy);
       if (md < MOUSE_RADIUS && md > 0) {
-        const force = (1 - md / MOUSE_RADIUS) * REPEL_STRENGTH * dt;
+        const force = (1 - md / MOUSE_RADIUS) * REPEL_STRENGTH;
         p.vx += (mdx / md) * force;
         p.vy  = (p.vy || 0) + (mdy / md) * force;
       }
 
-      /* dampen repulsion velocity */
-      p.vx *= Math.pow(0.96, dt);
-      if (p.vy) p.vy *= Math.pow(0.96, dt);
+      /* dampen horizontal repulsion, preserve upward speed */
+      p.vx *= 0.96;
+      if (p.vy) p.vy *= 0.96;
 
       /* move: rise upward + any repulsion offset */
-      p.x += p.vx * dt;
-      p.y -= (p.speed + (p.vy || 0)) * dt;
+      p.x += p.vx;
+      p.y -= p.speed + (p.vy || 0);
 
       /* wrap horizontal */
       if (p.x < 0) p.x = W;
@@ -1798,9 +1790,10 @@ themeBtn.addEventListener('click', () => {
         }
       }
     }
+    requestAnimationFrame(tick);
   }
 
-  init(); requestAnimationFrame(tick);
+  init(); tick();
   window.addEventListener('resize', init, { passive: true });
 })();
 
