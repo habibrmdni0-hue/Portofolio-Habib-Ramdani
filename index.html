@@ -1705,6 +1705,20 @@ themeBtn.addEventListener('click', () => {
   const isEdge   = /Edg\//.test(navigator.userAgent);
   const isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor) && !isEdge;
 
+  if (isChrome) {
+    /* .name-grad uses background-clip:text with var(--accent) — must override the gradient directly */
+    const nameGrad = document.getElementById('h-w2');
+    if (nameGrad) {
+      nameGrad.style.backgroundImage = 'linear-gradient(120deg, #4a9ebb 0%, #74cfe8 50%, #4a9ebb 100%)';
+    }
+    /* also try querySelectorAll-based overrides as requested */
+    document.querySelectorAll('.accent, .text-accent, [class*="accent"]').forEach(el => {
+      el.style.color = '#4a9ebb';
+    });
+    document.documentElement.style.setProperty('--accent-color', '#4a9ebb');
+    document.documentElement.style.setProperty('--color-accent', '#4a9ebb');
+  }
+
   const canvas = document.getElementById('particles-canvas');
   const ctx = canvas.getContext('2d');
   let W, H, particles;
