@@ -216,35 +216,6 @@
       padding: 120px 24px 80px;
     }
 
-    /* grid lines */
-    .hero-grid {
-      position: absolute;
-      inset: 0;
-      background-image:
-        linear-gradient(rgba(255,255,255,0.028) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.028) 1px, transparent 1px);
-      background-size: 64px 64px;
-      pointer-events: none;
-    }
-
-    /* glow orbs */
-    .orb {
-      position: absolute;
-      border-radius: 50%;
-      filter: blur(60px);
-      pointer-events: none;
-    }
-    .orb-1 {
-      width: 700px; height: 700px;
-      background: radial-gradient(circle, rgba(0,194,255,0.10) 0%, transparent 70%);
-      top: -200px; right: -150px;
-    }
-    .orb-2 {
-      width: 500px; height: 500px;
-      background: radial-gradient(circle, rgba(255,107,0,0.07) 0%, transparent 70%);
-      bottom: 0; left: -150px;
-    }
-
     .hero-content {
       position: relative;
       z-index: 1;
@@ -733,11 +704,6 @@
       --text-2:   #444444;
       --text-3:   #777777;
     }
-    html.light .hero-grid {
-      background-image:
-        linear-gradient(rgba(0,0,0,0.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0,0,0,0.04) 1px, transparent 1px);
-    }
     html.light #nav.scrolled { background: rgba(245,245,245,0.90); }
     html.light #mobile-menu  { background: rgba(245,245,245,0.97); }
     html.light #mobile-menu a { color: var(--text-2); }
@@ -1053,10 +1019,7 @@
 
 <!-- ── HERO ───────────────────────────────────────────────────── -->
 <section id="hero">
-  <div class="hero-grid"></div>
   <canvas id="particles-canvas"></canvas>
-  <div class="orb orb-1"></div>
-  <div class="orb orb-2"></div>
 
   <div class="hero-content container">
     <div class="hero-eyebrow" id="h-eyebrow">
